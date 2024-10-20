@@ -4,28 +4,42 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    [Header("Player")]
+
+    public Transform player;
+    public Vector3 inputDirection;
+
+
+    [Header("Triggers")]
+
+    public ICameraTrigger trigger;
+
+
+    [Header("References")]
+
     Camera cam;
 
-    public Vector3 inputDirection;
 
     void Start()
     {
         cam = GetComponent<Camera>();
     }
 
-    public void SetPosition(Vector3 position)
+    void Update()
     {
-        transform.position = position;
+        if (trigger != null)
+        {
+            trigger.React();
+        }
     }
 
-    public void SetRotation(Quaternion rotation)
+    public void SetTrigger(ICameraTrigger trigger)
     {
-        transform.rotation = rotation;
-    }
+        if(this.trigger != null) this.trigger.End();
 
-    public void SetEuler(Vector3 euler)
-    {
-        transform.eulerAngles = euler;
+        if (trigger != null) trigger.Set(this);
+
+        this.trigger = trigger;
     }
 
     public Vector3 ResetInputDirection(Vector2 input)
