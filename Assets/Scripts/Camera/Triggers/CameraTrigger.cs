@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class CameraTrigger : MonoBehaviour, ICameraTrigger
 {
-    [Header("Camera Trigger")]
-
-    public Transform cameraObjData;
-
-    public Color gizmoColor = Color.red;
-
-
     protected CameraController controller;
 
     protected ICameraBehaviour behaviour;
@@ -32,6 +25,8 @@ public class CameraTrigger : MonoBehaviour, ICameraTrigger
                 behaviour = gameObject.AddComponent<CameraBehaviourInstant>();
             }
         }
+
+        behaviour.Set(controller);
     }
 
     public virtual void React()
@@ -39,30 +34,8 @@ public class CameraTrigger : MonoBehaviour, ICameraTrigger
         behaviour.React();
     }
 
-    public virtual void End() { }
-
-
-    void OnDrawGizmos()
+    public virtual void End()
     {
-        if (cameraObjData != null)
-        {
-            Gizmos.color = gizmoColor;
-
-            Gizmos.DrawLine(cameraObjData.position, cameraObjData.position + cameraObjData.forward * .5f);
-            Gizmos.DrawLine(cameraObjData.position + cameraObjData.forward * .5f, cameraObjData.position + cameraObjData.forward * .25f + cameraObjData.right * .1f);
-            Gizmos.DrawLine(cameraObjData.position + cameraObjData.forward * .5f, cameraObjData.position + cameraObjData.forward * .25f - cameraObjData.right * .1f);
-        }
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        if (cameraObjData != null)
-        {
-            Gizmos.color = new Color(1, 0.4f, 0);
-
-            Gizmos.DrawLine(cameraObjData.position, cameraObjData.position + cameraObjData.forward * .5f);
-            Gizmos.DrawLine(cameraObjData.position + cameraObjData.forward * .5f, cameraObjData.position + cameraObjData.forward * .25f + cameraObjData.right * .1f);
-            Gizmos.DrawLine(cameraObjData.position + cameraObjData.forward * .5f, cameraObjData.position + cameraObjData.forward * .25f - cameraObjData.right * .1f);
-        }
+        behaviour.End();
     }
 }

@@ -4,7 +4,18 @@ using UnityEngine;
 
 public interface ICameraBehaviour
 {
-    public Transform cameraObjData { get; set; }
+    /// <summary>
+    /// Set controller with reference to controller.
+    /// </summary>
+    public void Set(CameraController controller) { }
 
+    /// <summary>
+    /// Update the current behaviour on every frame if its the active trigger.
+    /// </summary>
     public void React() { }
+
+    /// <summary>
+    /// Done before calling Set on the next trigger.
+    /// </summary>
+    public void End() { }
 }

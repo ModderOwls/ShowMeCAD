@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// This script has to be attached to the main camera.
+/// </summary>
 public class PlayerController : MonoBehaviour
 {
     [Header("Stats")]
@@ -23,12 +26,15 @@ public class PlayerController : MonoBehaviour
     public Vector3 velocity;
     public Vector3 moveDirection;
     public Vector3 groundNormal;
+    Vector3 lastPhysicsPosition;
 
 
     [Header("References")]
 
     CharacterController control;
     CameraController cam;
+
+    public Transform interpModel;
 
     LayerMask layersGround;
 
@@ -41,16 +47,29 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         control = GetComponent<CharacterController>();
+
         cam = Camera.main.GetComponent<CameraController>();
+        cam.player = interpModel;
 
         layersGround = LayerMask.GetMask("Ground");
+
+        lastPhysicsPosition = transform.position;
     }
 
     void FixedUpdate()
     {
+        lastPhysicsPosition = transform.position;
+
         Move();
 
         DetectRamp();
+    }
+
+    void Update()
+    {
+        //Why does unity not have a physics fraction method like godot??
+        float inbetweenPhysics = (Time.time - Time.fixedTime)/Time.fixedDeltaTime;
+        interpModel.position = Vector3.Lerp(lastPhysicsPosition, transform.position, inbetweenPhysics);
     }
 
     void Move()
