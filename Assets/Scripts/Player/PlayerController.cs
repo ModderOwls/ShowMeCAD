@@ -53,6 +53,7 @@ public class PlayerController : MonoBehaviour
 
         layersGround = LayerMask.GetMask("Ground");
 
+        interpModel.parent = null;
         lastPhysicsPosition = transform.position;
     }
 

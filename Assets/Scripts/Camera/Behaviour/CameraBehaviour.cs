@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraBehaviour : MonoBehaviour, ICameraBehaviour
 {
-    [Header("Camera Trigger")]
+    [Header("Camera Behaviour")]
 
     public Transform cameraObjData;
 
@@ -19,7 +19,7 @@ public class CameraBehaviour : MonoBehaviour, ICameraBehaviour
 
     public void UpdateCamera(Transform camera)
     {
-        camera.transform.position = cameraObjData.position;
-        camera.transform.rotation = cameraObjData.rotation;
+        camera.position = cameraObjData.position;
+        camera.rotation = cameraObjData.rotation;
     }
 }
