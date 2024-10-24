@@ -48,13 +48,14 @@ public class CameraBehaviourSpline : MonoBehaviour, ICameraBehaviour
 
     public virtual void React()
     {
-        objFollowPosition = Amplify(objFollow.position) + objFollowOffset;
+        objFollowPosition = Amplify(objFollow.position);
 
         UpdateCamera(controller.transform, GetNearestPoint());
     }
 
     public virtual void End() { }
 
+    //Should prolly cache the current point and just check if its near to one of two closest points, but not worth it for a prototype.
     public Vector3 GetNearestPoint()
     {
         int nearestPoint = 0;
@@ -91,9 +92,8 @@ public class CameraBehaviourSpline : MonoBehaviour, ICameraBehaviour
         float lineDistance = line.magnitude;
         Vector3 lineNorm = line.normalized;
 
-        Vector3 lineFollow = objFollowPosition - Amplify(pointOne);
-        float dot = Vector3.Dot(lineFollow, lineNorm);
-        dot /= lineDistance;
+        Vector3 lineFollow = objFollowPosition - (Amplify(pointOne) + objFollowOffset);
+        float dot = Vector3.Dot(lineFollow, lineNorm) / lineDistance;
 
         if (dot < 0)
         {
@@ -151,12 +151,12 @@ public class CameraBehaviourSpline : MonoBehaviour, ICameraBehaviour
         {
             Gizmos.color = new Color(1, 0.4f, 0);
 
-            Vector3 basePoint = cameraObjData[0].position + objFollowOffset;
-            Vector3 lastPoint = Amplify(cameraObjData[0].position - basePoint) + basePoint;
+            Vector3 basePoint = CheckForZeroAmplifier(objFollowOffset);
+
+            Vector3 lastPoint = Amplify(cameraObjData[0].position) + basePoint;
             for (int i = 0; i < cameraObjData.Length; ++i)
             {
-                Vector3 pos = Amplify(cameraObjData[i].position - basePoint);
-                pos += basePoint;
+                Vector3 pos = Amplify(cameraObjData[i].position) + basePoint;
 
                 Gizmos.DrawLine(lastPoint, pos);
 
@@ -177,5 +177,15 @@ public class CameraBehaviourSpline : MonoBehaviour, ICameraBehaviour
                 Gizmos.DrawCube(GetNearestPoint(), Vector3.one * .25f);
             }
         }
+    }
+
+    //Only used in debugging/gizmos as it's stinky and slow.
+    private Vector3 CheckForZeroAmplifier(Vector3 vector)
+    {
+        if (objFollowAmplifier.x == 0) vector.x += transform.position.x;
+        if (objFollowAmplifier.y == 0) vector.y += transform.position.y;
+        if (objFollowAmplifier.z == 0) vector.z += transform.position.z;
+
+        return vector;
     }
 }

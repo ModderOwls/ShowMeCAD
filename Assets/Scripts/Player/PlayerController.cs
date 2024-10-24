@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     public float drag;
     public float linearDrag;
 
+    public float fallSpeed;
+
 
     [Header("Input")]
 
@@ -27,6 +29,7 @@ public class PlayerController : MonoBehaviour
     public Vector3 moveDirection;
     public Vector3 groundNormal;
     Vector3 lastPhysicsPosition;
+    bool grounded;
 
 
     [Header("References")]
@@ -107,7 +110,8 @@ public class PlayerController : MonoBehaviour
         Ray groundRay = new Ray(transform.position, -transform.up * (control.height / 2 + .3f));
         Debug.DrawRay(groundRay.origin, groundRay.direction, Color.blue);
 
-        if (Physics.Raycast(groundRay, out rayGround, 100, layersGround))
+        grounded = Physics.Raycast(groundRay, out rayGround, 100, layersGround);
+        if (grounded)
         {
             groundNormal = rayGround.normal;
             transform.position = rayGround.point + transform.up * (control.height / 2);
